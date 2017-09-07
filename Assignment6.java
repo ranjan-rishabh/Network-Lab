@@ -1,4 +1,3 @@
-
 package assignment6;
 import java.net.*;
 import java.util.Scanner;
@@ -21,17 +20,26 @@ public class Assignment6 {
                 sent[k] = true;
                 DatagramPacket senPacket = new DatagramPacket(senData, senData.length, IP, 1459);
                 senSocket.send(senPacket);
+                System.out.println("Sent:"+k);
                 DatagramPacket recPacket = new DatagramPacket(recData, recData.length);
-                String recSent = new String(recPacket.getData());
-                int ack = Integer.parseInt(recSent.charAt(4));                
+                senSocket.receive(recPacket);
+                String recSent = new String(recPacket.getData(),0,recPacket.getLength());
+                String tes = new String("All Packets Received");
+                if(recSent.equals(tes))
+                {
+                    System.out.println("All Packets Sent");
+                    break;
+                }
+                int ack = (int)recSent.charAt(4) - 48;
                 if(ack == 8)
                 {
+                    System.out.print("Enter Next To Send:");
                     int a = in.nextInt();
                     k = a;
                 }
                 else
                 {
-                    System.out.println("From Receiver:"+recSent);
+                    System.out.println("Ack From Receiver:"+recSent);
                     if(oack == ack)
                         k = ack;
                     else 
@@ -48,6 +56,5 @@ public class Assignment6 {
         {
             e.printStackTrace();
         }
-    }
-    
+    }    
 }
